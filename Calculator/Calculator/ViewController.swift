@@ -18,9 +18,11 @@ class ViewController: UIViewController
     {
         let digit = sender.currentTitle!
 
+        var welcomeMessage: String
+        
         if(typingNumber)
         {
-            display.text = display.text! + digit
+            display.text = display.text! + (digit == "." && display.text!.rangeOfString(".") != nil ? "" : digit)
         }
         else
         {
@@ -43,8 +45,12 @@ class ViewController: UIViewController
         case "×": binaryOperation { $0 * $1 }
         case "÷": binaryOperation { $1 / $0 }
         case "√": unaryOperation { sqrt($0) }
+        case "sin": unaryOperation { sin($0) }
+        case "cos": unaryOperation { cos($0) }
+        case "π": displayValue = M_PI
         default: break
         }
+        enter()
     }
     
     func binaryOperation(operation: (Double, Double) -> Double)
@@ -53,7 +59,6 @@ class ViewController: UIViewController
         {
             displayValue = operation(operandStack.removeLast(), operandStack.removeLast())
         }
-        enter()
     }
     
     func unaryOperation(operation: (Double) -> Double)
@@ -62,7 +67,6 @@ class ViewController: UIViewController
         {
             displayValue = operation(operandStack.removeLast())
         }
-        enter()
     }
     
     var operandStack = Array<Double>()
